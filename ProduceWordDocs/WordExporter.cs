@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -40,7 +39,7 @@ namespace ProduceWordDocs
                 if (p.Overview.TryGetValue("Land Area", out var land)) body.Append(MakeKeyVal("Land Area", land));
                 if (p.Overview.TryGetValue("Energy Efficiency Class", out var ee)) body.Append(MakeKeyVal("Energy Class", ee));
                 body.Append(MakeHyperlink("URL", p.Url));
-                body.Append(new Paragraph(new Run(new DocumentFormat.OpenXml.Drawing.Text(" ")))); // spacer
+                body.Append(new Paragraph(new Run(new Text(" ")))); // spacer
                 i++;
             }
 
@@ -103,19 +102,19 @@ namespace ProduceWordDocs
             return new Paragraph(
                 new ParagraphProperties(
                     new ParagraphStyleId() { Val = "Heading" + Math.Clamp(level, 1, 3) }),
-                new Run(new DocumentFormat.OpenXml.Drawing.Text(text)));
+                new Run(new Text(text)));
         }
 
         private static Paragraph MakeParagraph(string text)
         {
-            return new Paragraph(new Run(new DocumentFormat.OpenXml.Drawing.Text(text)));
+            return new Paragraph(new Run(new Text(text)));
         }
 
         private static Paragraph MakeKeyVal(string key, string val)
         {
             return new Paragraph(
-                new Run(new RunProperties(new Bold()), new DocumentFormat.OpenXml.Drawing.Text(key + ": ")),
-                new Run(new DocumentFormat.OpenXml.Drawing.Text(val ?? "-")));
+                new Run(new RunProperties(new Bold()), new Text(key + ": ")),
+                new Run(new Text(val ?? "-")));
         }
 
         private static Paragraph MakeHyperlink(string label, string url)
