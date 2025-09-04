@@ -132,7 +132,8 @@ namespace ProduceWordDocs
             // (b) .docx ανά ακίνητο
             foreach (var it in items)
             {
-                exporter.CreatePropertyDocx(it);
+                var docx = exporter.CreatePropertyDocx(it);
+                exporter.ConvertDocxToPdf(docx);
             }
 
             Console.WriteLine("\nDone!");

@@ -7,7 +7,11 @@ using System.Threading.Tasks;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using OpenXmlPowerTools;
 using SixLabors.ImageSharp;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
+using PdfSharpCore;
+using System.Xml.Linq;
 
 
 namespace ProduceWordDocs
@@ -45,6 +49,23 @@ namespace ProduceWordDocs
 
             main.Document.Save();
             return path;
+        }
+
+        public string ConvertDocxToPdf(string docxPath)
+        {
+            var pdfPath = Path.ChangeExtension(docxPath, ".pdf");
+
+            var wml = new WmlDocument(docxPath);
+            var settings = new WmlToHtmlConverterSettings
+            {
+                PageTitle = Path.GetFileNameWithoutExtension(docxPath)
+            };
+            XElement html = WmlToHtmlConverter.ConvertToHtml(wml, settings);
+            var htmlString = html.ToString(SaveOptions.DisableFormatting);
+
+            var pdf = PdfGenerator.GeneratePdf(htmlString, PageSize.A4);
+            pdf.Save(pdfPath);
+            return pdfPath;
         }
 
         public string CreatePropertyDocx(Property p)
